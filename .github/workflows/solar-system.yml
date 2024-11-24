@@ -23,7 +23,14 @@ jobs:
           uses: actions/setup-node@v4
           with:
             node-version: 20
-    
+
+        - name: Cache NPM dependencies
+          uses: actions/cache@v4
+          with:
+            path: ~/.npm
+            # sele da un nombre unico a la key de estos ficheros en cahe haciendo un hash del fichero package-lock.json, cualquier cambio que reciba este fichero
+            # que se genere un nuevo valor y cambie la cache por la nueva que se genere
+            key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}    
         - name: Install Dependencies
           run: npm install
     
