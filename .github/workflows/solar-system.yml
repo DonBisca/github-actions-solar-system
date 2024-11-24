@@ -68,3 +68,33 @@ jobs:
               name: Code-Coverage-Result
               path: coverage
               retention-days: 5
+
+    docker:
+      name: Containerization
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: GHCR Login
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            # el usuario se recupera del contexto de github
+            username: donbisca
+            # username: ${{ github.repository_owner }}
+            # el token de github en este caso no hace falta crearlo como un secreto, se genera automaticamente
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Container Registry Push          
+          uses: docker/build-push-action@v6
+          with:
+            # ruta donde se tiene el Dockerfile
+            context: .
+            push: true
+            # se genera una version nueva basada en el sha del commit
+            tags: |
+                ghcr.io/donbisca/solar-system:${{ github.sha }}
+        
+      
