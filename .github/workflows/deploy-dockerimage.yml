@@ -16,8 +16,8 @@ jobs:
     steps:
       - name: Obtener las últimas etiquetas de Docker
         id: fetch-tags
-        run: |
-          tags=$(curl -s "https://registry.hub.docker.com/v2/repositories/<image-name>/tags?page_size=5" | jq -r '.results[].name')
+        run: |              
+          tags=$(curl -s "https://registry.hub.docker.com/v2/repositories/library/nginx/tags?page_size=5" | jq -r '.results[].name')
           echo "Últimas etiquetas disponibles:"
           echo "$tags"
           echo "::set-output name=tags::$tags"
