@@ -20,4 +20,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Mostrar entorno seleccionado
-        run: echo "Has seleccionado el entorno: ${{ github.event.inputs.environment }}"
+        run: |
+          echo "Has seleccionado el entorno: ${{ github.event.inputs.environment }}"
