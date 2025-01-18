@@ -1,0 +1,23 @@
+name: Workflow con lista de opciones
+
+on:
+  workflow_dispatch: 
+    inputs:
+      environment:
+        description: "Selecciona el entorno"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - dev01
+          - dev02
+          - dev03
+          - stg01
+          - prod01
+
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mostrar entorno seleccionado
+        run: echo "Has seleccionado el entorno: ${{ github.event.inputs.environment }}"
