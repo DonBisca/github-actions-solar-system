@@ -1,0 +1,37 @@
+name: Deploy Docker Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      docker_tag:
+        description: "Especifica la versión de la imagen de Docker"
+        required: true
+        default: "latest"
+
+jobs:
+  get-docker-tags:
+    runs-on: ubuntu-latest
+    outputs:
+      selected_tag: ${{ steps.select-tag.outputs.docker_tag }}
+    steps:
+      - name: Obtener las últimas etiquetas de Docker
+        id: fetch-tags
+        run: |        
+          tags=$(curl -s "https://registry.hub.docker.com/v2/repositories/nginx/tags?page_size=5" | jq -r '.results[].name')
+          echo "Últimas etiquetas disponibles:"
+          echo "$tags"
+          echo "::set-output name=tags::$tags"
+
+      - name: Seleccionar etiqueta
+        id: select-tag
+        run: |
+          # Aquí puedes usar lógica para seleccionar automáticamente o validar el tag.
+          echo "::set-output name=docker_tag::${{ github.event.inputs.docker_tag }}"
+
+  deploy:
+    needs: get-docker-tags
+    runs-on: ubuntu-latest
+    steps:
+      - name: Usar la etiqueta seleccionada
+        run: |
+          echo "Usando la imagen con etiqueta: ${{ needs.get-docker-tags.outputs.selected_tag }}"
